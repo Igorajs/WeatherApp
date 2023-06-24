@@ -1,6 +1,9 @@
-def print_hi(name):
-    print(f'Hi, {name}')
+import tkinter as tk
+
+win = tk.Tk()
+win.title('Weather checker')
+win.geometry('740x600')
+win.resizable(False, False)
 
 
-if __name__ == '__main__':
-    print_hi('PyCharm')
+win.mainloop()
