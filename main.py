@@ -18,7 +18,6 @@ def checkWeather():
     #Deklaracja zmiennych i przypisywanie nowych wartości
 
     r = response
-    print(r)
     icon = r['weather'][0]['icon']
     temp = int(r['main']['temp']-273.15)
     tempMin = int(r['main']['temp_min']-273.15)
@@ -28,11 +27,11 @@ def checkWeather():
     wind = r['wind']['speed']
     clouds = r['clouds']['all']
     image_path = f'icons/{icon}@2x.png'
-    img_resize = Image.open(image_path).resize((70, 70))
+    img_resize = Image.open(image_path).resize((90, 90))
     img = ImageTk.PhotoImage(img_resize)
-    typ2 = tk.Label(frameInfo, bg=bgc, fg='white', image=img)
-    typ2.image = img
-    typ2.grid(column=0, row=2, padx=10)
+    type.image = img
+    type.configure(image=img)
+    type.pack(side='right')
     tvar.set(f'{temp}°C')
     hvar.set(f'{humidity}%')
     pvar.set(f'{pressure} hPa')
@@ -40,6 +39,11 @@ def checkWeather():
     cvar.set(f'{clouds} %')
     mmvar.set(f'{tempMin}°C / {tempMax}°C')
     cityvar.set(f'{r["name"]}')
+    #Formatowanie czasu
+    cTime = dt.datetime.timestamp(dt.datetime.utcnow())
+    timeVal.set(dt.datetime.fromtimestamp(cTime+r['timezone']).strftime('%H:%M:%S'))
+    countryVal.set(r['sys']['country'])
+    cordsVal.set(f"{r['coord']['lat']} / {r['coord']['lon']}")
 
 
 #bgc = '#35383d'
@@ -60,9 +64,9 @@ mmvar = tk.StringVar()
 cvar = tk.StringVar()
 errorvar = tk.StringVar()
 countryVal = tk.StringVar()
+cordsVal = tk.StringVar()
 timeVal = tk.StringVar()
-sunriseVal = tk.StringVar()
-sunsetVal = tk.StringVar()
+
 
 cityvar.set("*City name*")
 tvar.set('...')
@@ -73,8 +77,7 @@ mmvar.set('...')
 cvar.set('...')
 countryVal.set('...')
 timeVal.set('...')
-sunriseVal.set('...')
-sunsetVal.set('...')
+cordsVal.set('...')
 
 # Tytuł
 title = tk.Label(win, text="Weather Checker", bg=bgc, fg='white', font=('Arial', 40, 'bold'))
@@ -94,34 +97,34 @@ errorLabel.pack(ipadx=10)
 
 # Informacje o pogodzie
 ifg = '#f73434'
-
-cityName = tk.Label(win, bg=bgc, fg='#e3b719', font=('Arial 22 bold'), textvariable=cityvar)
-cityName.pack()
+img=''
+frameNT = tk.Frame(win, bg=bgc)
+cityName = tk.Label(frameNT, bg=bgc, fg='#e3b719', font=('Arial 22 bold'), textvariable=cityvar)
+cityName.pack(side='left')
+type = tk.Label(frameNT, bg=bgc, fg='white', image=img)
+type.pack(side='right')
+frameNT.pack(pady=(0 ,10))
 
 frameDesc = tk.Frame(win, bg=bgc)
 country = tk.Label(frameDesc, bg=bgc, fg=ifg, font=('Arial 13 bold'), text="Country󠁥󠁳󠁰󠁶󠁿:")
-time = tk.Label(frameDesc, bg=bgc, fg=ifg, font=('Arial 13 bold'), text="Time:")
-sunrise = tk.Label(frameDesc, bg=bgc, fg=ifg, font=('Arial 13 bold'), text="Sunrise:")
-sunset = tk.Label(frameDesc, bg=bgc, fg=ifg, font=('Arial 13 bold'), text="Sunset:")
-country.grid(column=0, row=0, sticky="W")
-time.grid(column=0, row=1, sticky="W")
-sunrise.grid(column=0, row=2, sticky="W")
-sunset.grid(column=0, row=3, sticky="W")
+time = tk.Label(frameDesc, bg=bgc, fg=ifg, font=('Arial 13 bold'), text="Local time:")
+cords = tk.Label(frameDesc, bg=bgc, fg=ifg, font=('Arial 13 bold'), text="Coords:")
+country.grid(column=0, row=0, sticky="W", padx=5)
+time.grid(column=0, row=2, sticky="W", padx=5)
+cords.grid(column=0, row=1, sticky="W", padx=5)
+
 
 countryV = tk.Label(frameDesc, bg=bgc, fg='white', font=('Arial 13 bold'), textvariable=countryVal)
+cordsV = tk.Label(frameDesc, bg=bgc, fg='white', font=('Arial 13 bold'), textvariable=cordsVal)
 timeV = tk.Label(frameDesc, bg=bgc, fg='white', font=('Arial 13 bold'), textvariable=timeVal)
-sunriseV = tk.Label(frameDesc, bg=bgc, fg='white', font=('Arial 13 bold'), textvariable=sunriseVal)
-sunsetV = tk.Label(frameDesc, bg=bgc, fg='white', font=('Arial 13 bold'), textvariable=sunsetVal)
 countryV.grid(column=1, row=0)
-timeV.grid(column=1, row=1)
-sunriseV.grid(column=1, row=2)
-sunsetV.grid(column=1, row=3)
+timeV.grid(column=1, row=2)
+cordsV.grid(column=1, row=1)
 
 frameDesc.pack()
 
 frameInfo = tk.Frame(win, bg=bgc)
-typ1 = tk.Label(frameInfo, bg=bgc, fg=ifg, font=('Arial 13 bold'), text="Type")
-typ1.grid(column=0, row=0, padx=10)
+
 t1 = tk.Label(frameInfo, bg=bgc, fg=ifg, font=('Arial 13 bold'), text="Temperature")
 t1.grid(column=1, row=0, padx=10)
 w1 = tk.Label(frameInfo, bg=bgc, fg=ifg, font=('Arial 13 bold'), text="Wind")
