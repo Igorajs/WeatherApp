@@ -2,6 +2,15 @@ import tkinter as tk
 import datetime as dt
 import requests
 
+def checkWeather():
+    BASE_URL = "http://api.openweathermap.org/data/2.5/weather?"
+    API_KEY = '14aa10bc5f9015cce02d398d9195a099'
+    CITY = entry.get()
+    entry.delete(0, tk.END)
+    url = BASE_URL + "appid=" + API_KEY + "&q=" + CITY
+    response = requests.get(url).json()
+    print(response)
+    print(url)
 
 bgc = '#35383d'
 win = tk.Tk()
@@ -19,6 +28,7 @@ hvar = tk.StringVar()
 pvar = tk.StringVar()
 mmvar = tk.StringVar()
 cvar = tk.StringVar()
+errorvar = tk.StringVar()
 
 cityvar.set("*City name*")
 tvar.set('...')
@@ -37,9 +47,11 @@ frameCenter = tk.Frame(win, bg=bgc)
 inputLabel = tk.Label(frameCenter, text="Search for City:", bg=bgc, fg='white', font=('Arial',13))
 inputLabel.pack()
 entry = tk.Entry(frameCenter, width=30, font=('Arial 15'))
-sbtn = tk.Button(frameCenter, text="Search", bg='#05a11f', fg='#daebdd',font=('Arial 10 bold'))
+sbtn = tk.Button(frameCenter, text="Search", bg='#05a11f', fg='#daebdd', font=('Arial 10 bold'), command=checkWeather)
 entry.pack(fill="x", side='left', padx=10)
 sbtn.pack(fill="x", side='left', ipadx=10)
+errorLabel = tk.Label(frameCenter, bg=bgc, fg='red', font=('Arial', 13), textvariable=errorvar)
+errorLabel.pack()
 frameCenter.pack()
 
 # Informacje o pogodzie
