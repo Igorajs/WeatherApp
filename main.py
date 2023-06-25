@@ -9,10 +9,16 @@ def checkWeather():
     entry.delete(0, tk.END)
     url = BASE_URL + "appid=" + API_KEY + "&q=" + CITY
     response = requests.get(url).json()
+    if response['cod'] == '404':
+        errorvar.set('Such a city does not exist')
+        return
+    errorvar.set('')
+
     print(response)
     print(url)
 
-bgc = '#35383d'
+#bgc = '#35383d'
+bgc = '#6140ad'
 win = tk.Tk()
 win.title('Weather checker')
 win.geometry('740x600')
@@ -50,9 +56,9 @@ entry = tk.Entry(frameCenter, width=30, font=('Arial 15'))
 sbtn = tk.Button(frameCenter, text="Search", bg='#05a11f', fg='#daebdd', font=('Arial 10 bold'), command=checkWeather)
 entry.pack(fill="x", side='left', padx=10)
 sbtn.pack(fill="x", side='left', ipadx=10)
-errorLabel = tk.Label(frameCenter, bg=bgc, fg='red', font=('Arial', 13), textvariable=errorvar)
-errorLabel.pack()
 frameCenter.pack()
+errorLabel = tk.Label(win, bg=bgc, fg='red', font=('Arial', 13), textvariable=errorvar)
+errorLabel.pack(ipadx=10)
 
 # Informacje o pogodzie
 frameInfo = tk.Frame(win, bg=bgc)
